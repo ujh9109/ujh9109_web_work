@@ -23,9 +23,13 @@
 	
 		<h1>인덱스 페이지 입니다</h1>
 		<ul>
+			<li><a href="${pageContext.request.contextPath }/user/signup-form.jsp">회원가입</a></li>
 			<li><a href="${pageContext.request.contextPath }/member/List.jsp">회원목록</a></li>
 			<li><a href="${pageContext.request.contextPath }/book/list.jsp">책목록</a></li>
-			<li><a href="${pageContext.request.contextPath }/user/signup-form.jsp">회원가입</a></li>
+			<li><a href="${pageContext.request.contextPath }/user/Loginform.jsp">로그인</a></li>
+			<li><a href="${pageContext.request.contextPath }/user/Logout.jsp">로그아웃</a></li>
+			
+			
 		</ul>
 		<div id="carouselExampleIndicators" class="carousel slide">
 		  <div class="carousel-indicators">

@@ -40,6 +40,7 @@
 		//세션 유지시간 설정(초단위)
 		session.setMaxInactiveInterval(60*10); //설정하지 않으면 기본 30분
 	}
+	
 %>
 <!DOCTYPE html>
 <html>
