@@ -5,7 +5,8 @@
 <%
 	//세션에 저장된 userName을 읽어온다.
 	String userName = (String)session.getAttribute("userName");
-	UserDto dto = new UserDao().getByUserName(userName);
+	UserDto dto = UserDao.getInstance().getByUserName(userName);
+	
 %>
 <!DOCTYPE html>
 <html>
@@ -33,7 +34,12 @@
 			<tr>
 				<th>프로필 이미지</th>
 				<td>
+					<%if(dto.getProfileImage()==null){ %>
 					<i style="font-size:50px" class="bi bi-person-circle"></i>
+					<%}else{ %>
+					<img src="${pageContext.request.contextPath }/upload/<%=dto.getProfileImage() %>" 
+					style="width:100px; height:100px; border-radius:50%;"/>
+					<% }%>
 				</td>
 			</tr>
 			<tr>
@@ -47,5 +53,6 @@
 		</table>
 		<a href="edit.jsp">개인 정보 수정(이메일, 프로필사진)</a>
 	</div>
+	
 </body>
 </html>

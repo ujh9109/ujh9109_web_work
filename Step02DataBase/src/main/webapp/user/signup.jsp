@@ -18,7 +18,7 @@
 	dto.setPassword(hashed);
 	dto.setEmail(email);
 	
-	boolean isSuccess=new UserDao().insert(dto);
+	boolean isSuccess=UserDao.getInstance().insert(dto);
 	
 %>
 <!DOCTYPE html>

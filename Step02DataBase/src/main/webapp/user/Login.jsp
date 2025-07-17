@@ -17,7 +17,7 @@
 	boolean isValid = false;
 	
 	//db에서 userName을 이용해서 select 되는 정보가 있는지 select 해본다.
-	UserDto dto = new UserDao().getByUserName(userName);
+	UserDto dto = UserDao.getInstance().getByUserName(userName);
 	//만일 select 되는 정보가 있다면(최소 userName은 존재)
 	if(dto !=null){
 		//raw 비밀번호와 DB에 저장된 암호화된 비밀번호를 비교해서 일치 하는 지 확인한다.
@@ -44,7 +44,7 @@
 		//HttpSession 객체에 "userName"이라는 키 값으로 userName을 저장한다.
 		session.setAttribute("userName", userName);
 		//세션 유지시간 설정(초단위)
-		session.setMaxInactiveInterval(60*10); //설정하지 않으면 기본 30분
+		session.setMaxInactiveInterval(60*60); //설정하지 않으면 기본 30분
 	}
 	
 %>
