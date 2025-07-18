@@ -1,9 +1,4 @@
-ClipBoard
-FileList
-Chatting
 
-Font-Size
-14
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -19,6 +14,9 @@ Font-Size
 	</jsp:include>
 	<div class="container">
 		<h1>인덱스 페이지 입니다</h1>
+		<ul>
+			<a href="${pageContext.request.contextPath }/board/list.jsp">게시글 목록</a>
+		</ul>
 		<div id="carouselExampleIndicators" class="carousel slide">
 		  <div class="carousel-indicators">
 		    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
