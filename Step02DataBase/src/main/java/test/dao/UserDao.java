@@ -244,4 +244,5 @@ public class UserDao {
 			return false; //작업 실패라는 의미에서 false 리턴하기
 		}
 	}
+	
 }

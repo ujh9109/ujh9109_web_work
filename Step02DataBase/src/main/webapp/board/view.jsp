@@ -10,6 +10,11 @@ int num = Integer.parseInt(request.getParameter("num"));
 BoardDto dto = BoardDao.getInstance().getByNum(num);
 
 String userName =(String)session.getAttribute("userName");
+
+//만일 본인 글 자세히 보기가 아니면 조회수를 1 증가 시킨다.
+if(!dto.getWriter().equals(userName)){
+		BoardDao.getInstance().addViewCount(num);
+	}
 %>
 <!DOCTYPE html>
 <html>
@@ -40,7 +45,15 @@ String userName =(String)session.getAttribute("userName");
 			</tr>
 			<tr>
 				<th>작성자</th>
-				<td><%=dto.getWriter()%></td>
+				<td>
+					<%if(dto.getProfileImage() == null){ %>
+						<i style="font-size:100px;" class="bi bi-person-circle"></i>
+					<%}else{ %>
+						<img src="${pageContext.request.contextPath }/upload/<%=dto.getProfileImage() %>" 
+							style="width:100px;height:100px;border-radius:50%;"/>
+					<%} %>
+					<%=dto.getWriter() %>
+				</td>
 			</tr>
 			<tr>
 				<th>제목</th>
@@ -49,6 +62,10 @@ String userName =(String)session.getAttribute("userName");
 			<tr>
 				<th>조회수</th>
 				<td><%=dto.getViewCount()%></td>
+			</tr>
+			<tr>
+				<th>작성일</th>
+				<td><%=dto.getCreatedAt()%></td>
 			</tr>
 		</table>
 		<%-- 

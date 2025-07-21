@@ -53,7 +53,29 @@ List<BoardDto> list = BoardDao.getInstance().selectPage(dto);
 <html>
 <head>
 <meta charset="UTF-8">
-<title>/board/list.jsp</title>
+<title>/board/list2.jsp</title>
+<style>
+ul a {
+	text-decoration: none;
+}
+
+/* ul 요소이면서 클래스 속성의 값이 pagination 인 요소에 적용할 css */
+ul.my-pagination {
+	list-style-type: none;/*ul의 디스크 없애기*/
+	padding-left: 0; /*왼쪽 패딩 0*/
+	display: flex; /*자식요소를 flex 레이아웃으로 배치. 가로배치*/
+	gap: 10px; /*자시교소끼리 공간 부여하기*/
+	justify-content: center; /*가로로 배치된 상태에서 가운데 정렬*/
+	
+	
+}
+
+.active {
+	font-weight: bold;
+	color: red;
+	text-decoration: underline;
+}
+</style>
 <jsp:include page="/WEB-INF/include/resource.jsp"></jsp:include>
 </head>
 <body>
@@ -94,21 +116,21 @@ List<BoardDto> list = BoardDao.getInstance().selectPage(dto);
 			</tbody>
 		</table>
 
-		<ul class="pagination justify-content-center">
+		<ul class="my-pagination">
 			
 			<%if (startPageNum != 1) {%>
-			<li class="page-item"><a class="page-link" href="list.jsp?pageNum=<%=startPageNum - 1%>">&lsaquo;</a></li>
+			<li><a href="list.jsp?pageNum=<%=startPageNum - 1%>">&lsaquo;</a></li>
 			<%}%>
 
 			
 			<%for (int i = startPageNum; i <= endPageNum; i++) {%>
-			<li class="page-item"><a class="page-link <%=i == pageNum ? "active" : ""%>"
+			<li><a class="<%=i == pageNum ? "active" : ""%>"
 				href="list.jsp?pageNum=<%=i%>"><%=i%></a></li>
 			<%}%>
 
 			
 			<%if (endPageNum < totalPageCount) {%>
-			<li class="page-item"><a class="page-link" href="list.jsp?pageNum=<%=endPageNum + 1%>">&rsaquo;</a></li>
+			<li><a href="list.jsp?pageNum=<%=endPageNum + 1%>">&rsaquo;</a></li>
 			<%}%>
 			
 			

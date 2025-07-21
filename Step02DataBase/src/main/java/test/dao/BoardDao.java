@@ -171,9 +171,12 @@ public class BoardDao {
 			conn = new DbcpBean().getConn();
 			//실행할 sql문
 			String sql = """
-				SELECT writer, title, content, viewCount, createdAt
-				FROM board
-				WHERE num=?
+				SELECT writer, title, content, viewCount, 
+				TO_CHAR(b.createdAt, 'YY"년" MM"월" DD"일" HH24:MI') AS createdAt,
+				profileImage
+				FROM board b
+				INNER JOIN users u ON b.writer = u.userName
+				WHERE b.num=?
 			""";
 			pstmt = conn.prepareStatement(sql);
 			//? 에 값 바인딩
@@ -189,6 +192,7 @@ public class BoardDao {
 				dto.setContent(rs.getString("content"));
 				dto.setViewCount(rs.getInt("viewCount"));
 				dto.setCreatedAt(rs.getString("createdAt"));
+				dto.setProfileImage(rs.getString("profileImage"));
 				 
 				
 			}
@@ -287,4 +291,149 @@ public class BoardDao {
 			return false; //작업 실패라는 의미에서 false 리턴하기
 		}
 	}
+	
+	//페이징 처리
+	//특정 페이지에 해당하는 row만 select해서 리턴하는 메소드
+	public List<BoardDto> selectPage(BoardDto dto){
+		
+		List<BoardDto> list = new ArrayList<>();
+
+		//필요한 객체를 담을 지역변수를 미리 만든다 
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = new DbcpBean().getConn();
+			//실행할 sql문
+			String sql = """
+					SELECT *
+					FROM
+						(SELECT result1.*, ROWNUM AS rnum
+						FROM	
+							(SELECT num, writer, title, viewCount, createdAt
+							FROM board
+							ORDER BY num DESC) result1)
+					WHERE rnum BETWEEN ? AND ?
+				""";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, dto.getStartRowNum());
+			pstmt.setInt(2, dto.getEndRowNum());
+
+			// select 문 실행하고 결과를 ResultSet 으로 받아온다
+			rs = pstmt.executeQuery();
+			//반복문 돌면서 ResultSet 에 담긴 데이터를 추출해서 리턴해줄 객체에 담는다
+			while (rs.next()) {
+				BoardDto dto2 =new BoardDto();
+				dto2.setNum(rs.getInt("num"));
+				dto2.setWriter(rs.getString("writer"));
+				dto2.setTitle(rs.getString("title"));
+				dto2.setViewCount(rs.getInt("viewCount"));
+				dto2.setCreatedAt(rs.getString("createdAt"));
+				
+				//회원 한명의 정보가 담긴 새로운 MemberDto 객체의 참조값을 List 에 누적시키기
+				list.add(dto2);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+			}
+		}
+
+		return list;
+	}
+	
+	public int getCount() {
+		
+			int count=0;
+			//필요한 객체를 담을 지역변수를 미리 만든다 
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				conn = new DbcpBean().getConn();
+				//실행할 sql문
+				String sql = """
+								SELECT MAX(ROWNUM) AS count
+								FROM board
+									
+								""";
+						pstmt = conn.prepareStatement(sql);
+				//? 에 값 바인딩
+
+				// select 문 실행하고 결과를 ResultSet 으로 받아온다
+				rs = pstmt.executeQuery();
+				//반복문 돌면서 ResultSet 에 담긴 데이터를 추출해서 리턴해줄 객체에 담는다
+				while (rs.next()) {
+					
+					count = rs.getInt("count");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (rs != null)
+						rs.close();
+					if (pstmt != null)
+						pstmt.close();
+					if (conn != null)
+						conn.close();
+				} catch (Exception e) {
+				}
+			}
+
+			return count;
+		}
+	
+	//조회수 증가 시키는 메소드.
+	public boolean addViewCount(int num) {
+			BoardDto dto = new BoardDto();
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			//변화된 row 의 갯수를 담을 변수 선언하고 0으로 초기화
+			int rowCount = 0;
+			try {
+				conn = new DbcpBean().getConn();
+				String sql = """
+								UPDATE board
+								SET viewCount = viewCount + 1
+								WHERE num=?
+								""";
+				pstmt = conn.prepareStatement(sql);
+				
+				// ? 에 순서대로 필요한 값 바인딩
+				pstmt.setInt(1, num);
+				
+				// sql 문 실행하고 변화된(추가된, 수정된, 삭제된) row 의 갯수 리턴받기
+				rowCount = pstmt.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (pstmt != null)
+						pstmt.close();
+					if (conn != null)
+						conn.close();
+				} catch (Exception e) {
+				}
+			}
+
+			//변화된 rowCount 값을 조사해서 작업의 성공 여부를 알아 낼수 있다.
+			if (rowCount > 0) {
+				return true; //작업 성공이라는 의미에서 true 리턴하기
+			} else {
+				return false; //작업 실패라는 의미에서 false 리턴하기
+			}
+		
+	}
+	
+	
 }
+
