@@ -16,6 +16,9 @@ public class BoardDto {
 	private int nextNum;
 	private int prevNum;
 	
+	//검색 기능을 위한 필드
+	private String keyword;
+	
 	public String getProfileImage() {
 		return profileImage;
 	}
@@ -81,6 +84,12 @@ public class BoardDto {
 	}
 	public void setPrevNum(int prevNum) {
 		this.prevNum = prevNum;
+	}
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 	
 	
