@@ -10,7 +10,11 @@ public class BoardDto {
 	//페이징 처리를 위한 필드
 	private int startRowNum;
 	private int endRowNum;
+	//프로필 이미지  출력을 위한 필드
 	private String profileImage;
+	//이전,다음페이지 위한 필드
+	private int nextNum;
+	private int prevNum;
 	
 	public String getProfileImage() {
 		return profileImage;
@@ -65,6 +69,18 @@ public class BoardDto {
 	}
 	public void setEndRowNum(int endRowNum) {
 		this.endRowNum = endRowNum;
+	}
+	public int getNextNum() {
+		return nextNum;
+	}
+	public void setNextNum(int nextNum) {
+		this.nextNum = nextNum;
+	}
+	public int getPrevNum() {
+		return prevNum;
+	}
+	public void setPrevNum(int prevNum) {
+		this.prevNum = prevNum;
 	}
 	
 	
